@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dados da Planilha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Planilha Online</h1>
+  <input type="text" id="search" placeholder="Pesquisar...">
+  <table id="table">
+    <thead>
+      <tr>
+        <!-- Substitua os nomes das colunas aqui -->
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>RS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Os dados serão inseridos aqui dinamicamente -->
+    </tbody>
+  </table>
+
+  <script>
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2rx9s0ArvWLbu9cgWAuvvwiduM_LGKRUMysUwfXHGIxV5Tpm8B7pirOpwY6vIvMo67_haov7IgSK/pub?output=json';
+
+    fetch(sheetUrl)
+      .then(response => response.json())
+      .then(data => {
+        const rows = data.feed.entry;
+        const tableBody = document.querySelector('#table tbody');
+
+        // Preenche os dados na tabela
+        rows.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${row['gsx$coluna1'].$t}</td>
+            <td>${row['gsx$coluna2'].$t}</td>
+            <td>${row['gsx$coluna3'].$t}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+
+        // Configura a pesquisa
+        document.getElementById('search').addEventListener('input', event => {
+          const searchText = event.target.value.toLowerCase();
+          Array.from(tableBody.rows).forEach(row => {
+            row.style.display = Array.from(row.cells).some(cell =>
+              cell.textContent.toLowerCase().includes(searchText)
+            )
+              ? ''
+              : 'none';
+          });
+        });
+      })
+      .catch(error => console.error('Erro ao buscar os dados:', error));
+  </script>
+</body>
+</html>
