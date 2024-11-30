@@ -4,14 +4,81 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dados da Planilha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
   <h1>Planilha Online</h1>
-  <iframe
-    https://docs.google.com/spreadsheets/d/1eT3Va2pEdyFGH1AtRSYfiCjlmLSvdzTUVxha4nfB0K4/edit?usp=sharing
-    width="100%"
-    height="600px"
-    frameborder="0">
-  </iframe>
+  <input type="text" id="search" placeholder="Pesquisar...">
+  <table id="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>RS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Os dados serão inseridos aqui dinamicamente -->
+    </tbody>
+  </table>
+
+  <script>
+    const sheetUrl = 'https://corsproxy.io/?https://spreadsheets.google.com/feeds/list/1eT3Va2pEdyFGH1AtRSYfiCjlmLSvdzTUVxha4nfB0K4/od6/public/values?alt=json';
+
+    fetch(sheetUrl)
+      .then(response => response.json())
+      .then(data => {
+        const rows = data.feed.entry;
+        const tableBody = document.querySelector('#table tbody');
+
+        // Preenche os dados na tabela
+        rows.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${row['gsx$nome'].$t}</td>
+            <td>${row['gsx$cpf'].$t}</td>
+            <td>${row['gsx$rs'].$t}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+
+        // Configura a pesquisa
+        document.getElementById('search').addEventListener('input', event => {
+          const searchText = event.target.value.toLowerCase();
+          Array.from(tableBody.rows).forEach(row => {
+            row.style.display = Array.from(row.cells).some(cell =>
+              cell.textContent.toLowerCase().includes(searchText)
+            )
+              ? ''
+              : 'none';
+          });
+        });
+      })
+      .catch(error => console.error('Erro ao buscar os dados:', error));
+  </script>
 </body>
 </html>
