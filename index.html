@@ -60,9 +60,9 @@
         rows.forEach(row => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${row['gsx$nome'].$t}</td>
-            <td>${row['gsx$cpf'].$t}</td>
-            <td>${row['gsx$rs'].$t}</td>
+            <td>${row['gsx$Nome'].$t}</td>
+            <td>${row['gsx$CPF'].$t}</td>
+            <td>${row['gsx$RS'].$t}</td>
           `;
           tableBody.appendChild(tr);
         });
