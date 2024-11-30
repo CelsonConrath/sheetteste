@@ -48,7 +48,13 @@
   </table>
 
   <script>
-    const sheetUrl = 'https://corsproxy.io/?https://spreadsheets.google.com/feeds/list/1eT3Va2pEdyFGH1AtRSYfiCjlmLSvdzTUVxha4nfB0K4/1/public/values?alt=json';
+    <iframe
+  src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSG2rx9s0ArvWLbu9cgWAuvvwiduM_LGKRUMysUwfXHGIxV5Tpm8B7pirOpwY6vIvMo67_haov7IgSK/pubhtml"
+  width="100%"
+  height="600px"
+  frameborder="0"
+></iframe>
+
 
     fetch(sheetUrl)
       .then(response => response.json())
