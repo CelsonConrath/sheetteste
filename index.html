@@ -47,42 +47,4 @@
   </table>
 
   <!-- Tabletop.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
-  <script>
-    const spreadsheetId = '1eT3Va2pEdyFGH1AtRSYfiCjlmLSvdzTUVxha4nfB0K4';
-
-    window.onload = function() {
-      Tabletop.init({
-        key: spreadsheetId,
-        callback: function(data) {
-          const tableBody = document.querySelector('#table tbody');
-
-          // Adiciona os dados à tabela
-          data.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td>${row.nome}</td>
-              <td>${row.cpf}</td>
-              <td>${row.rs}</td>
-            `;
-            tableBody.appendChild(tr);
-          });
-
-          // Configura a pesquisa
-          document.getElementById('search').addEventListener('input', event => {
-            const searchText = event.target.value.toLowerCase();
-            Array.from(tableBody.rows).forEach(row => {
-              row.style.display = Array.from(row.cells).some(cell =>
-                cell.textContent.toLowerCase().includes(searchText)
-              )
-                ? ''
-                : 'none';
-            });
-          });
-        },
-        simpleSheet: true
-      });
-    };
-  </script>
-</body>
-</html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></scrip
