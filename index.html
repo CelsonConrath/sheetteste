@@ -6,6 +6,10 @@
   <title>Exibir CSV</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -19,10 +23,17 @@
     th {
       background-color: #f4f4f4;
     }
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <h1>Dados do CSV</h1>
+  <h1>Planilha CSV</h1>
+  <input type="text" id="search" placeholder="Pesquisar...">
   <table id="table">
     <thead>
       <tr>
@@ -39,6 +50,7 @@
   <script>
     const csvUrl = 'https://drive.google.com/uc?export=download&id=1AcD3WG0mdnOimu4XWhVQjeh7iF4-1IUo';
 
+    // Carregar CSV usando PapaParse
     Papa.parse(csvUrl, {
       download: true,
       header: true,
@@ -52,6 +64,18 @@
             <td>${row['RS'] || ''}</td>
           `;
           tableBody.appendChild(tr);
+        });
+
+        // Configurar pesquisa
+        document.getElementById('search').addEventListener('input', event => {
+          const searchText = event.target.value.toLowerCase();
+          Array.from(tableBody.rows).forEach(row => {
+            row.style.display = Array.from(row.cells).some(cell =>
+              cell.textContent.toLowerCase().includes(searchText)
+            )
+              ? ''
+              : 'none';
+          });
         });
       },
       error: function(error) {
