@@ -3,68 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dados do CSV</title>
+  <title>Exibir CSV</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
-    input { margin-bottom: 10px; padding: 10px; width: 100%; font-size: 16px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
   </style>
 </head>
 <body>
-  <h1>Planilha CSV</h1>
-  <input type="text" id="search" placeholder="Pesquisar...">
+  <h1>Dados do CSV</h1>
   <table id="table">
-    <thead></thead>
-    <tbody></tbody>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>RS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Linhas serão preenchidas dinamicamente -->
+    </tbody>
   </table>
+
   <script>
-    const csvUrl = 'https://drive.google.com/uc?export=download&id=1AcD3WG0mdnOimu4XWhVQjeh7iF4-1IUo
-              ' //'https://drive.google.com/file/d/1AcD3WG0mdnOimu4XWhVQjeh7iF4-1IUo/view?usp=sharing';
+    const csvUrl = 'https://drive.google.com/uc?export=download&id=1AcD3WG0mdnOimu4XWhVQjeh7iF4-1IUo';
 
     Papa.parse(csvUrl, {
       download: true,
       header: true,
       complete: function(results) {
-        const data = results.data;
-        const table = document.getElementById('table');
-        const thead = table.querySelector('thead');
-        const tbody = table.querySelector('tbody');
-
-        // Criar cabeçalhos
-        const headers = Object.keys(data[0]);
-        const headerRow = document.createElement('tr');
-        headers.forEach(header => {
-          const th = document.createElement('th');
-          th.textContent = header;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-
-        // Preencher linhas
-        data.forEach(row => {
+        const tableBody = document.querySelector('#table tbody');
+        results.data.forEach(row => {
           const tr = document.createElement('tr');
-          headers.forEach(header => {
-            const td = document.createElement('td');
-            td.textContent = row[header];
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
+          tr.innerHTML = `
+            <td>${row['Nome'] || ''}</td>
+            <td>${row['CPF'] || ''}</td>
+            <td>${row['RS'] || ''}</td>
+          `;
+          tableBody.appendChild(tr);
         });
-
-        // Configurar pesquisa
-        document.getElementById('search').addEventListener('input', event => {
-          const searchText = event.target.value.toLowerCase();
-          Array.from(tbody.rows).forEach(row => {
-            row.style.display = Array.from(row.cells).some(cell =>
-              cell.textContent.toLowerCase().includes(searchText)
-            )
-              ? ''
-              : 'none';
-          });
-        });
+      },
+      error: function(error) {
+        console.error('Erro ao carregar o CSV:', error);
       }
     });
   </script>
